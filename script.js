@@ -1,122 +1,113 @@
-let currentTest = 0;
+// Данные торговых точек
+const stores = [
+  { id: 'goncharova', name: 'Гончарова 19к1' },
+  { id: 'gagarina', name: 'Гагарина 27' },
+  { id: 'kmarx', name: 'К.Маркса 13а' },
+  { id: 'nevskogo', name: 'А.Невского 2е' },
+  { id: 'radishcheva', name: 'Радищева 39' },
+  { id: 'olimp', name: 'Олимпийский 10' },
+];
+
+// Пример теста по теме «Кондитерские изделия»
+const testQuestions = [
+  {
+    question: "Какой бисквит входит в торт груша -финик?",
+    answers: ["Ванильный", "Кексовый", "Шоколадный", "Миндальный"],
+    correctIndex: 1,
+  },
+  {
+    question: "Какой крем в эклере шу?",
+    answers: ["Заварной с маслом", "Заварной со сливками", "Крем чиз", "Шоколадный"],
+    correctIndex: 1,
+  },
+  // ... добавь остальные вопросы сюда ...
+];
+
 let currentQuestionIndex = 0;
-let score = 0;
-let timeLeft = 30;
-let questions = [];
+let userAnswers = [];
 
-function registerUser() {
-  const name = document.getElementById('fullName').value;
-  const position = document.getElementById('position').value;
-  const workplace = document.getElementById('workplace').value;
-  const phone = document.getElementById('phone').value;
+// Элементы DOM
+const registrationForm = document.getElementById('registration-form');
+const testSection = document.getElementById('test-section');
+const questionContainer = document.getElementById('question-container');
+const answersContainer = document.getElementById('answers-container');
+const nextButton = document.getElementById('next-question-btn');
+const userNameInput = document.getElementById('user-name');
+const userPositionInput = document.getElementById('user-position');
+const userPhoneInput = document.getElementById('user-phone');
+const userStoreSelect = document.getElementById('user-store');
 
-  if (!name || !position || !workplace || !phone) {
-    alert('Заполните все поля');
+// Инициализация селекта торговых точек
+function initStoreSelect() {
+  stores.forEach(store => {
+    const option = document.createElement('option');
+    option.value = store.id;
+    option.textContent = store.name;
+    userStoreSelect.appendChild(option);
+  });
+}
+
+// Показать вопрос
+function showQuestion(index) {
+  const q = testQuestions[index];
+  questionContainer.textContent = q.question;
+  answersContainer.innerHTML = '';
+
+  q.answers.forEach((answer, i) => {
+    const label = document.createElement('label');
+    label.classList.add('answer-option');
+
+    const input = document.createElement('input');
+    input.type = 'radio';
+    input.name = 'answer';
+    input.value = i;
+
+    input.addEventListener('change', () => {
+      nextButton.disabled = false;
+    });
+
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(' ' + answer));
+    answersContainer.appendChild(label);
+  });
+
+  nextButton.disabled = true;
+}
+
+// Обработка нажатия кнопки «Далее»
+nextButton.addEventListener('click', () => {
+  const selected = document.querySelector('input[name="answer"]:checked');
+  if (!selected) return;
+
+  userAnswers.push(parseInt(selected.value));
+  currentQuestionIndex++;
+
+  if (currentQuestionIndex < testQuestions.length) {
+    showQuestion(currentQuestionIndex);
+  } else {
+    showResults();
+  }
+});
+
+// Показать результаты (без правильных ответов, просто оценка)
+function showResults() {
+  testSection.innerHTML = <h2>Спасибо за прохождение теста!</h2><p>Ваш результат: ${userAnswers.length} из ${testQuestions.length} вопросов отвечено.</p>;
+}
+
+// Обработка регистрации
+registrationForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  // Простая валидация
+  if (!userNameInput.value.trim()  !userPositionInput.value.trim()  !userPhoneInput.value.trim() || !userStoreSelect.value) {
+    alert('Пожалуйста, заполните все поля регистрации');
     return;
   }
 
-  localStorage.setItem('name', name);
-  localStorage.setItem('position', position);
-  localStorage.setItem('workplace', workplace);
-  localStorage.setItem('phone', phone);
+  registrationForm.style.display = 'none';
+  testSection.style.display = 'block';
+  showQuestion(currentQuestionIndex);
+});
 
-  showSection('mainMenu');
-  showAvailableTests();
-}
-
-function showSection(id) {
-  document.querySelectorAll('section').forEach(s => s.style.display = 'none');
-  document.getElementById(id).style.display = 'block';
-}
-
-function showKnowledge() {
-  showSection('knowledge');
-}
-
-function showAvailableTests() {
-  const position = localStorage.getItem('position');
-  const testMap = {
-    'Кондитер': [1, 6],
-    'Пекарь': [2, 6],
-    'Администратор': [3, 4, 6, 7],
-    'Повар': [5, 6]
-  };
-
-  const testNames = {
-    1: 'Кондитерские изделия',
-    2: 'Выпечка',
-    3: 'Кулинария',
-    4: 'Кассовая дисциплина',
-    5: 'Поварское дело',
-    6: 'Трудовой этикет',
-    7: 'Сервис'
-  };
-
-  const container = document.getElementById('testButtonsContainer');
-  container.innerHTML = '';
-
-  const availableTests = testMap[position] || [];
-  availableTests.forEach(testId => {
-    const btn = document.createElement('button');
-    btn.textContent = `Пройти тест: ${testNames[testId]}`;
-    btn.onclick = () => startTestById(testId);
-    container.appendChild(btn);
-  });
-}
-
-function startTestById(testId) {
-  currentTest = testId;
-  currentQuestionIndex = 0;
-  score = 0;
-  timeLeft = 30;
-  questions = getQuestionsForTest(testId);
-  showSection('test');
-  showQuestion();
-  startTimer();
-}
-
-function getQuestionsForTest(id) {
-  return [
-    { question: 'Вопрос 1', answers: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'], correct: 0 },
-    { question: 'Вопрос 2', answers: ['Ответ 1', 'Ответ 2', 'Ответ 3', 'Ответ 4'], correct: 1 }
-  ];
-}
-
-function showQuestion() {
-  const q = questions[currentQuestionIndex];
-  document.getElementById('questionText').textContent = q.question;
-  const container = document.getElementById('answersContainer');
-  container.innerHTML = '';
-  q.answers.forEach((a, i) => {
-    const btn = document.createElement('button');
-    btn.textContent = a;
-    btn.onclick = () => {
-      if (i === q.correct) score++;
-      nextQuestion();
-    };
-    container.appendChild(btn);
-  });
-}
-
-function nextQuestion() {
-  currentQuestionIndex++;
-  if (currentQuestionIndex < questions.length) {
-    showQuestion();
-  } else {
-    alert(`Тест завершён. Правильных ответов: ${score} из ${questions.length}`);
-    showSection('mainMenu');
-  }
-}
-
-function startTimer() {
-  const timerEl = document.getElementById('timer');
-  const interval = setInterval(() => {
-    timeLeft--;
-    timerEl.textContent = `Осталось времени: ${timeLeft} сек`;
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      alert('Время вышло!');
-      showSection('mainMenu');
-    }
-  }, 1000);
-}
+// Запуск инициализации
+initStoreSelect();
