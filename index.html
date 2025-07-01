@@ -1,0 +1,55 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Мини-приложение От Марка</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Добро пожаловать в От Марка!</h1>
+        <div id="registration">
+            <h2>Регистрация сотрудника</h2>
+            <input type="text" id="fio" placeholder="ФИО" />
+            <input type="text" id="position" placeholder="Должность" />
+            <input type="text" id="workplace" placeholder="Место работы" />
+            <button id="registerBtn">Зарегистрироваться</button>
+        </div>
+        <div id="mainMenu" style="display:none;">
+            <h2>Главное меню</h2>
+            <button id="knowledgeBtn">База знаний</button>
+            <button id="testBtn">Пройти тест</button>
+            <button id="statsBtn">Статистика</button>
+            <button id="logoutBtn">Выйти</button>
+        </div>
+        <div id="knowledge" style="display:none;">
+            <h2>База знаний</h2>
+            <div id="slides">
+                <div class="slide active">Слайд 1: Добро пожаловать в обучающий раздел.</div>
+                <div class="slide">Слайд 2: Здесь размещаются материалы по работе.</div>
+                <div class="slide">Слайд 3: Видео и презентации.</div>
+            </div>
+            <button id="prevSlide">Назад</button>
+            <button id="nextSlide">Вперёд</button>
+            <button id="backToMenu1">В меню</button>
+        </div>
+        <div id="test" style="display:none;">
+            <h2>Тест</h2>
+            <div id="questionContainer"></div>
+            <div id="answersContainer"></div>
+            <div id="timer"></div>
+            <button id="nextQuestionBtn" style="display:none;">Следующий вопрос</button>
+            <button id="finishTestBtn" style="display:none;">Завершить тест</button>
+            <button id="backToMenu2">В меню</button>
+        </div>
+        <div id="stats" style="display:none;">
+            <h2>Статистика</h2>
+            <div id="statsContent"></div>
+            <button id="backToMenu3">В меню</button>
+        </div>
+    </div>
+<script src="script.js"></script>
+</body>
+</html>
