@@ -1,47 +1,87 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>От Марка — Обучение</title>
-  <link rel="stylesheet" href="styles.css" />
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>От Марка Mini App</title>
+<link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="container">
-    <section id="registration">
-      <h2>Регистрация</h2>
-      <input type="text" id="fullName" placeholder="ФИО" />
-      <select id="position">
+<header>
+  <img src="https://otmarka.ru/_nuxt/img/logo-otmarka.1a3b95d.png" alt="От Марка" class="logo" />
+  <h1>Добро пожаловать в базу знаний "От Марка" - Обучение и тестирование</h1>
+</header>
+<main>
+  <!-- Регистрация -->
+  <section id="registration-section">
+    <h2>Регистрация сотрудника</h2>
+    <form id="registration-form">
+      <label for="fullname">ФИО:</label>
+      <input type="text" id="fullname" name="fullname" required />
+      
+      <label for="position">Должность:</label>
+      <select id="position" name="position" required>
         <option value="" disabled selected>Выберите должность</option>
-        <option value="Кондитер">Кондитер</option>
-        <option value="Пекарь">Пекарь</option>
-        <option value="Администратор">Администратор</option>
-        <option value="Повар">Повар</option>
+        <option value="conditer">Кондитер</option>
+        <option value="baker">Пекарь</option>
+        <option value="cook">Повар</option>
+        <option value="admin">Администратор</option>
       </select>
-      <input type="text" id="workplace" placeholder="Точка (например, Радищева)" />
-      <input type="tel" id="phone" placeholder="Телефон" />
-      <button onclick="registerUser()">Начать</button>
-    </section>
 
-    <section id="mainMenu" style="display:none;">
-      <h2>Главное меню</h2>
-      <button onclick="showKnowledge()">📚 База знаний</button>
-      <div id="testButtonsContainer"></div>
-    </section>
+      <label for="point">Торговая точка:</label>
+      <select id="point" name="point" required>
+        <option value="" disabled selected>Выберите торговую точку</option>
+        <option value="goncharova">Гончарова 19к1</option>
+        <option value="gagarina">Гагарина 27</option>
+        <option value="marksa">К.Маркса 13а</option>
+        <option value="nevskogo">А.Невского 2е</option>
+        <option value="radishcheva">Радищева 39</option>
+        <option value="olimpiyskiy">Олимпийский 10</option>
+      </select>
 
-    <section id="knowledge" style="display:none;">
-      <h2>База знаний</h2>
-      <p>Здесь будет обучающий материал.</p>
-      <button onclick="showSection('mainMenu')">Назад</button>
-    </section>
+      <label for="phone">Телефон:</label>
+      <input type="tel" id="phone" name="phone" required />
+      
+      <button type="submit">Зарегистрироваться</button>
+    </form>
+  </section>
 
-    <section id="test" style="display:none;">
-      <h2 id="questionText"></h2>
-      <div id="answersContainer"></div>
-      <p id="timer"></p>
-    </section>
-  </div>
+  <!-- База знаний -->
+  <section id="knowledge-section" style="display:none;">
+    <h2>База знаний</h2>
+    <p>Здесь будет размещена общая база знаний для всех сотрудников.</p>
+    <ul>
+      <li><a href="#">Учебник 1 (заглушка)</a></li>
+      <li><a href="#">Учебник 2 (заглушка)</a></li>
+      <li><a href="#">Учебник 3 (заглушка)</a></li>
+    </ul>
+  </section>
 
-  <script src="script.js"></script>
+  <!-- Тестирование -->
+  <section id="tests-section" style="display:none;">
+    <h2>Тесты по должности</h2>
+    <p>Выберите тест для прохождения:</p>
+    <select id="test-select">
+      <option value="" disabled selected>Выберите тест</option>
+      <option value="conditer_1">Кондитерские изделия</option>
+      <option value="baker_1">Выпечка</option>
+      <option value="cook_1">Поварское</option>
+      <option value="admin_1">Кулинария</option>
+      <option value="admin_4">Кассовая дисциплина</option>
+      <option value="admin_6">Трудовой этикет</option>
+      <option value="admin_7">Сервис</option>
+    </select>
+    <button id="start-test-btn" disabled>Начать тест</button>
+  </section>
+
+  <!-- Результаты теста -->
+  <section id="test-section" style="display:none;">
+    <h2>Тест</h2>
+    <div id="question-container"></div>
+    <button id="next-question-btn" disabled>Следующий вопрос</button>
+  </section>
+</main>
+
+<script src="script.js"></script>
 </body>
 </html>
